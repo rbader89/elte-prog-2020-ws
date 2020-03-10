@@ -1,3 +1,10 @@
+CREATE SEQUENCE public.pois_id_seq
+    INCREMENT 1
+    START 13
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
 CREATE TABLE public.pois
 (
     id integer NOT NULL DEFAULT nextval('pois_id_seq'::regclass),
