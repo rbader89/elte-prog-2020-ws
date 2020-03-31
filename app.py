@@ -2,8 +2,10 @@ import psycopg2
 from flask import Flask, request
 import json
 from psycopg2.extras import RealDictCursor
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 host = "localhost"
 port = 5432
@@ -64,7 +66,7 @@ def insert_poi():
 
     insert = '''INSERT INTO pois (name, type, condition, active, geom) 
     VALUES 
-    ('{0}', '{1}', {2}, {3}, ST_SetSRID(ST_MakePoint({4}, {5}), 23700))'''.format(
+    ('{0}', '{1}', {2}, {3}, ST_Transform(ST_SetSRID(ST_MakePoint({4}, {5}), 4326), 23700))'''.format(
         name, type, condition, active, x_coord, y_coord
     )
 
@@ -99,7 +101,7 @@ def update_poi_by_id(id):
             type = '{1}',
             condition = {2},
             active = {3},
-            geom = ST_SetSRID(ST_MakePoint({4}, {5}), 23700),
+            geom = ST_Transform(ST_SetSRID(ST_MakePoint({4}, {5}), 4326), 23700),
             last_updated = NOW()
         WHERE
             id = {6}
